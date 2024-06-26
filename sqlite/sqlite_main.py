@@ -1,5 +1,6 @@
 import telebot
 import sqlite3
+import os
 
 TOKEN = telebot.TeleBot('7478465201:AAHmj3KuKW7IXonkz6s-eSRRHHFPYyBmDv8')
 
@@ -8,7 +9,15 @@ password = None
 
 @TOKEN.message_handler(commands=['start'])
 def start(message):
-    conn = sqlite3.connect('info.sql')
+
+    folder_sql = '/sqlite/sqlite_list'
+
+    if not os.path.exists(folder_sql):
+        os.makedirs(folder_sql)
+
+    db_sql = os.path.join(folder_sql, 'info.sql')
+
+    conn = sqlite3.connect(db_sql)
     cur = conn.cursor()
 
     cur.execute('CREATE TABLE IF NOT EXISTS users (id int auto_increment primary key, name varchar(50), pass varchar(50))')
